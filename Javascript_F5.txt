@@ -1,0 +1,23 @@
+
+// Initialize variables to store the highest and lowest marks
+let highestMark = studentsMarks[0];
+let lowestMark = studentsMarks[0];
+
+// Iterate through the marks to find the highest and lowest
+for (let i = 1; i < studentsMarks.length; i++) {
+  const currentMark = studentsMarks[i];
+
+  // Check if the current mark is higher than the current highest
+  if (currentMark > highestMark) {
+    highestMark = currentMark;
+  }
+
+  // Check if the current mark is lower than the current lowest
+  if (currentMark < lowestMark) {
+    lowestMark = currentMark;
+  }
+}
+
+// Print the highest and lowest marks
+console.log('Highest Mark:', highestMark);
+console.log('Lowest Mark:', lowestMark);

@@ -1,0 +1,86 @@
+const readline = require('readline');
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+let assignmentName;
+let studentsMarks = [];
+
+function getInput(prompt, callback) {
+  rl.question(prompt, callback);
+}
+
+function inputAssignmentName() {
+  getInput('Enter the assignment name: ', function (name) {
+    assignmentName = name;
+    inputStudentMarks(0);
+  });
+}
+
+function inputStudentMarks(index) {
+  if (index >= 30) {
+    rl.close();
+    processStatistics();
+    return;
+  }
+
+  getInput(`Enter the mark for student ${index + 1}: `, function (mark) {
+    if (isValidMark(mark)) {
+      studentsMarks.push(parseInt(mark, 10));
+      inputStudentMarks(index + 1);
+    } else {
+      console.log('Invalid input. Please enter a mark between 0 and 30.');
+      inputStudentMarks(index);
+    }
+  });
+}
+
+function isValidMark(mark) {
+  mark = parseInt(mark, 10);
+  return !isNaN(mark) && mark >= 0 && mark <= 30;
+}
+
+function processStatistics() {
+  console.log('Assignment Name:', assignmentName);
+  console.log("Students' Marks:", studentsMarks);
+
+  const [highestMark, lowestMark] = findHighestAndLowestMarks(studentsMarks);
+  console.log('Highest Mark:', highestMark);
+  console.log('Lowest Mark:', lowestMark);
+
+  const { mean, standardDeviation } = calculateMeanAndStandardDeviation(studentsMarks);
+  console.log('Mean:', mean);
+  console.log('Standard Deviation:', standardDeviation);
+}
+
+function findHighestAndLowestMarks(marks) {
+  let highest = marks[0];
+  let lowest = marks[0];
+
+  for (let i = 1; i < marks.length; i++) {
+    if (marks[i] > highest) {
+      highest = marks[i];
+    }
+    if (marks[i] < lowest) {
+      lowest = marks[i];
+    }
+  }
+
+  return [highest, lowest];
+}
+
+function calculateMeanAndStandardDeviation(marks) {
+  const sum = marks.reduce((acc, mark) => acc + mark, 0);
+  const mean = sum / marks.length;
+
+  const squaredDifferences = marks.map(mark => (mark - mean) ** 2);
+  const sumOfSquaredDifferences = squaredDifferences.reduce((acc, squaredDiff) => acc + squaredDiff, 0);
+  const variance = sumOfSquaredDifferences / marks.length;
+  const standardDeviation = Math.sqrt(variance);
+
+  return { mean, standardDeviation };
+}
+
+inputAssignmentName();
